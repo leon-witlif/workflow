@@ -61,6 +61,32 @@ class Registry
         return $matched[0];
     }
 
+    public function getWorkflowByName(string $workflowName): WorkflowInterface
+    {
+        $matches = [];
+
+        foreach ($this->workflows as [$workflow, $supportStrategy]) {
+            if ($workflow->getName() === $workflowName) {
+                $matches[] = $workflow;
+            }
+        }
+
+        return array_first($matches);
+    }
+
+    public function getSupportStrategyByWorkflowName(string $workflowName): WorkflowSupportStrategyInterface
+    {
+        $matches = [];
+
+        foreach ($this->workflows as [$workflow, $supportStrategy]) {
+            if ($workflow->getName() === $workflowName) {
+                $matches[] = $supportStrategy;
+            }
+        }
+
+        return array_first($matches);
+    }
+
     /**
      * @return Workflow[]
      */
@@ -83,5 +109,16 @@ class Registry
         }
 
         return $supportStrategy->supports($workflow, $subject);
+    }
+}
+
+if (!function_exists('array_first')) {
+    function array_first(array $array)
+    {
+        foreach ($array as $value) {
+            return $value;
+        }
+
+        return null;
     }
 }
